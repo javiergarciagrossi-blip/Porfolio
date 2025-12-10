@@ -6,25 +6,41 @@
 /* --------------------------------------------------------------------------
    1. CSS Custom Properties
    -------------------------------------------------------------------------- */
+/* MODO CLARO PREDETERMINADO (Fall-back) */
 :root {
-	--bs-body-bg: #0f0f0f;
-	--bs-body-color: #f5f5f5;
-	--bs-primary: #6366f1;
-	--bs-primary-rgb: 99, 102, 241;
+    --bs-body-bg: #ffffff;         /* Fondo: Blanco */
+    --bs-body-color: #212529;      /* Texto: Gris Oscuro */
+    --bs-primary: #00bcd4;         /* **ACENTO ÚNICO: CYAN VIBRANTE** */
+    --bs-primary-rgb: 0, 188, 212;
+    --color-bg-alt: #f8f9fa;       /* Fondo de secciones: Gris muy claro */
+    --color-muted: #6c757d;
+    --navbar-bg: rgba(255, 255, 255, 0.95); /* Para Glassmorphism */
 
-	/* Custom tokens */
-	--color-bg-alt: #1a1a1a;
-	--color-muted: #6c757d;
-	--ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    /* ... otras variables como --ease-out */
+}
+
+/* MODO OSCURO (DARK MODE) */
+body.dark-mode { /* Usaremos una clase 'dark-mode' en el body */
+    --bs-body-bg: #0A0A0A;         /* Fondo: Negro profundo */
+    --bs-body-color: #EAEAEA;      /* Texto: Blanco casi puro */
+    --bs-primary: #00bcd4;         /* Acento: Se mantiene el CYAN VIBRANTE */
+    --bs-primary-rgb: 0, 188, 212;
+    --color-bg-alt: #161616;       /* Fondo de secciones: Gris oscuro */
+    --color-muted: #ADB5BD;        /* Texto secundario más claro */
+    --navbar-bg: rgba(10, 10, 10, 0.95); /* Para Glassmorphism */
 }
 
 /* --------------------------------------------------------------------------
    2. Base Overrides
    -------------------------------------------------------------------------- */
 body {
+    /* Usa las variables del tema actual */
 	background-color: var(--bs-body-bg);
 	color: var(--bs-body-color);
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave de tema */
 }
+
+/* ... el resto de la sección 2. Base Overrides se mantiene ... */
 
 .bg-dark {
 	background-color: var(--color-bg-alt) !important;
@@ -320,17 +336,26 @@ body {
 	}
 }
 
+
+
 /* --------------------------------------------------------------------------
    11. Responsive Adjustments
    -------------------------------------------------------------------------- */
 @media (max-width: 991.98px) {
 	.hero-title {
-		font-size: 3rem;
-	}
+	/* 5rem en vista grande (1400px+), 3rem en vista pequeña (320px) */
+    font-size: clamp(3rem, 10vw + 1rem, 5rem);
+    line-height: 1.1;
+    font-weight: 800; /* Extra bold para impacto */
+}
 
 	.shape {
 		transform: scale(0.6);
 	}
+	
+	h1, h2, h3 {
+    font-family: 'Poppins', sans-serif; /* Si usas Poppins desde CDN */
+}
 }
 
 @media (max-width: 575.98px) {
@@ -351,4 +376,34 @@ body {
 	.about-image::before {
 		display: none;
 	}
+}
+
+CSS
+
+/* --------------------------------------------------------------------------
+   12. Theme Toggle (Modo Oscuro/Claro)
+   -------------------------------------------------------------------------- */
+
+/* Estilo para que el botón use las variables de acento que definimos */
+#theme-toggle {
+    --bs-btn-color: var(--bs-primary);
+    --bs-btn-border-color: var(--bs-primary);
+    --bs-btn-hover-color: var(--bs-body-bg);
+    --bs-btn-hover-bg: var(--bs-primary);
+    --bs-btn-active-bg: var(--bs-primary);
+    line-height: 1; /* Centra el ícono */
+    padding: 0.375rem 0.65rem;
+}
+
+/* Ocultar la luna cuando esté en modo oscuro y mostrar el sol */
+body.dark-mode .light-mode-icon {
+    display: none !important;
+}
+body:not(.dark-mode) .dark-mode-icon {
+    display: none !important;
+}
+
+/* Asegurar que el sol se muestre en modo oscuro */
+body.dark-mode .dark-mode-icon {
+    display: inline !important;
 }

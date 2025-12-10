@@ -26,6 +26,8 @@
  * 🔗 SCROLLTRIGGER: https://gsap.com/docs/v3/Plugins/ScrollTrigger/
  */
 
+
+
 // ==========================================================================
 // 1. GSAP SETUP
 // ==========================================================================
@@ -101,6 +103,8 @@ function initHeroAnimations() {
 	 * - 'back.out' — slight overshoot and settle
 	 */
 	const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+	
 
 	/**
 	 * TIMELINE SEQUENCE WITH POSITION PARAMETERS
@@ -498,6 +502,59 @@ function initSmoothScroll() {
 // 8. Initialize Everything
 // ==========================================================================
 
+// =========================================================
+// LÓGICA DEL MODO OSCURO/CLARO (Theme Toggle)
+// =========================================================
+
+function applyTheme(theme) {
+    const body = document.body;
+    
+    if (theme === 'dark') {
+        body.classList.add('dark-mode');
+        // También puedes actualizar GSAP o componentes aquí si es necesario
+    } else {
+        body.classList.remove('dark-mode');
+    }
+}
+
+function initThemeToggle() {
+    const toggleButton = document.getElementById('theme-toggle');
+
+    // 1. Aplicar el tema almacenado al cargar la página
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        applyTheme(savedTheme);
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // 2. Si no hay tema guardado, usar la preferencia del sistema
+        applyTheme('dark');
+    } else {
+        applyTheme('light');
+    }
+    
+    // 3. Añadir el evento de clic al botón
+    if (toggleButton) {
+        toggleButton.addEventListener('click', () => {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const newTheme = isDarkMode ? 'light' : 'dark';
+            
+            // Aplicar el nuevo tema
+            applyTheme(newTheme);
+            
+            // Guardar la preferencia en el navegador
+            localStorage.setItem('theme', newTheme);
+        });
+    }
+}
+
+// =========================================================
+// Inicialización del script (ejecuta esto al final de main.js)
+// =========================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    initThemeToggle();
+    // initAdvancedScrollAnimations(); // Si tienes otras funciones, ponlas aquí
+});
+
 document.addEventListener('DOMContentLoaded', () => {
 	initHeroAnimations();
 	initScrollReveals();
@@ -522,3 +579,4 @@ window.cleanupAnimations = () => {
 	ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
 	gsap.killTweensOf('*');
 };
+
